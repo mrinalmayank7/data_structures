@@ -1,0 +1,87 @@
+#include <iostream>
+#include <vector>
+#include<queue>
+using namespace std;
+ 
+
+void insert(vector<int>& A, int key){  //since index starting from 0 so children of i are 2i+1 (odd), 2i+2 (even)
+    auto i = A.size();                 //example : children of 0 are 1 and 2, children of 2 are 5 and 6
+    A.emplace_back(key);
+    while (i > 0 && key > A[i % 2 == 0 ? (i-2)/2 : (i-1)/2]){//  even children = (i-2)/2 :odd children (i-1)/2
+        A[i] = A[i % 2 == 0 ? (i-2)/2 : (i-1)/2];
+        i = i % 2 == 0 ? (i-2)/2 : (i-1)/2;    
+    }
+    A[i] = key;
+}
+void swap(int *a, int *b){
+int temp;
+temp= *a;
+*a=*b;
+*b=temp;
+}
+
+void Delete(vector<int>& A){
+	auto n = A.size();
+	A[0]=A[n-1];
+	A.resize(A.size()-1);
+	int i=0;
+    int j=2*i+1; //since index starting from 0
+    while(j<n-2){
+     if(A[j+1]>A[j]){
+     	j=j+1;
+	 }
+	 if(A[i]<A[j]){
+	 	swap(&A[i],&A[j]);
+	 	i=j; //make j as new parent
+	 	j=2*j+1; // set new child
+	 }
+	 else{
+	 	break; //if parent A[i] > children A[j] then end the loop
+	 }
+	}
+}
+		
+	
+
+void Heapify(vector<int>& A){
+    auto n = A.size();                 
+        for (int i=n/2-1; i>=0; i--){
+        cout<<i<<"\n";
+        int j=2*i+1;
+		cout<<A[j]<<"\n"; 
+        while(j<n){
+            // Compare left and right children of current i
+            if (A[j] < A[j+1]){
+                j = j+1;
+            }
+ 	        if(A[i]<A[j]){
+	 	        swap(&A[i],&A[j]);
+	 	        i=j; //make j as new parent
+	 	        j=2*i+1; // set new child
+	            }
+           else {
+                break;
+            }
+        }
+    }
+}
+
+  
+int main() {
+    vector<int> A={5,10,30,20,35,40};
+    
+        /*int n,element;
+        cout<<"HOW MANY ELEMENTS YOU WANT TO INSERT IN THE HEAP ? ";
+        cin>>n;
+        A.resize(n);
+        for(int i=0;i<n;i++){
+         cout<<"ENTER ELEMENT "<<i+1<<" : ";
+         cin>>A[i];
+         }*/
+        Heapify(A);
+		for(int i=0;i<A.size();i++){
+		cout<<A[i]<<" ";
+		}
+
+
+}
